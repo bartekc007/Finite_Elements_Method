@@ -1,0 +1,5 @@
+﻿Height: 0.1
+Width: 0.1
+heightPointNumber: 4
+widthPointNumber: 4
+
