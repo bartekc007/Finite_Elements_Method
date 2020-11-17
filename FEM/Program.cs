@@ -25,33 +25,19 @@ namespace FEM
             Stopwatch t1 = Stopwatch.StartNew();
             GlobalGrid GH = new GlobalGrid(data);
             //grid1.DisplayElements();
-            
 
-            for(int u = 0; u<grid1.Elements.Length;u++)
+            for (int u = 0; u<grid1.Elements.Length;u++)
             {
                 // Creating global element
-                LocalElement3P localElement = new LocalElement3P(grid1, grid1.Elements[u]);
+                LocalElement localElement = new LocalElement(grid1, grid1.Elements[u],data);
 
-                int repeat = 0;
-                if (localElement is LocalElement3P)
-                {
-                    repeat = 9;
-                }   
-                else if (localElement is LocalElement2P)
-                {
-                    repeat = 4;
-                }
-                else
-                    throw new ArgumentException("Wrong type declaration -> localElement is" + localElement.GetType());
-
-
-                for (int i = 0; i < repeat; i++)
+                for (int i = 0; i < Math.Pow(data.IntegrationSchemaWariant,2); i++)
                 {
                     // Calculating Local H for every integration point
                     localElement.CalculateJacobian(i);
                     localElement.ReverseJacobian();
                     localElement.CalculateNxNy(i);
-                    localElement.CalculateH();
+                    localElement.CalculateH(i,data.KFactor);
 
                     // Saving Local H
                     grid1.Elements[u].CalculateLocalH(u,grid1,localElement);
@@ -59,9 +45,10 @@ namespace FEM
 
                 // Calculating Global H
                 GH.CalculateGlobalH(u, grid1);
+                //localElement.DisplayGausseQuadrature(u);
             }
             data.DisplayData();
-            //GH.DisplayGlobalH();
+            GH.DisplayGlobalH();
             Console.WriteLine("Execution Time: " + t1.Elapsed.TotalMilliseconds);
             GH.CalculateNonZeroElementPercentage();
             Console.ReadKey();

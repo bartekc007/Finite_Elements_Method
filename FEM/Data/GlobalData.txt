@@ -1,5 +1,6 @@
-﻿Height: 0.1
-Width: 0.1
-heightPointNumber: 4
-widthPointNumber: 4
-
+﻿0.1           Height:
+0.1           Width:
+4             HeightPointNumber:
+4             WidthPointNumber:
+4             IntegrationSchemaWariant
+25            k factor

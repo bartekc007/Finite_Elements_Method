@@ -28,17 +28,7 @@ namespace FEM.Models
         }
         public Element() { }
 
-        public void CalculateLocalH(int u, Grid grid1, LocalElement3P localElement)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    grid1.Elements[u].LocalH[j, k] += localElement.H[j,k];
-                }
-            }
-        }
-        public void CalculateLocalH(int u, Grid grid1, LocalElement2P localElement)
+        public void CalculateLocalH(int u, Grid grid1, LocalElement localElement)
         {
             for (int j = 0; j < 4; j++)
             {

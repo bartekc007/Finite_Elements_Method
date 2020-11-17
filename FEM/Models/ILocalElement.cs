@@ -14,7 +14,7 @@ namespace FEM.Models
         void ReverseJacobian();
         void CalculateDeterminant();
         void CalculateNxNy(int pc);
-        void CalculateH();
+        void CalculateH(int pc, int kFactor);
         void PrintDfSF();
         void DisplayLocalH(double[,] Hl, int u);
     }

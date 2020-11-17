@@ -48,8 +48,7 @@
     <Compile Include="Models\GlobalGrid.cs" />
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\ILocalElement.cs" />
-    <Compile Include="Models\LocalElement2P.cs" />
-    <Compile Include="Models\LocalElement3P.cs" />
+    <Compile Include="Models\LocalElement.cs" />
     <Compile Include="Models\Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,8 +59,6 @@
   <ItemGroup>
     <Content Include="Data\GlobalData.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\LocalElements\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
