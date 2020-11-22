@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Models\Element.cs" />
     <Compile Include="Models\GlobalData.cs" />
-    <Compile Include="Models\GlobalGrid.cs" />
+    <Compile Include="Models\GlobalMatrix.cs" />
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\ILocalElement.cs" />
     <Compile Include="Models\LocalElement.cs" />

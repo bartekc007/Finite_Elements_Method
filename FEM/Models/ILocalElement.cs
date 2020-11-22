@@ -9,7 +9,7 @@ namespace FEM.Models
     
     public interface ILocalElement
     {
-        void GenerateDerivativesForShapeFunctions();
+        void CalculateDerivativesForShapeFunctions();
         void CalculateJacobian(int j);
         void ReverseJacobian();
         void CalculateDeterminant();

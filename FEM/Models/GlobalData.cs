@@ -18,6 +18,8 @@ namespace FEM.Models
         public readonly int NumberOfNodes;
         public readonly int IntegrationSchemaWariant;
         public readonly int KFactor;
+        public readonly double SpecificHeat;
+        public readonly double Density;
        
 
         public GlobalData()
@@ -49,6 +51,12 @@ namespace FEM.Models
 
             oneLine = lines[5].Split(' ');
             this.KFactor = Int32.Parse(oneLine[0]);
+
+            oneLine = lines[6].Split(' ');
+            this.SpecificHeat = double.Parse(oneLine[0]);
+
+            oneLine = lines[7].Split(' ');
+            this.Density = double.Parse(oneLine[0]);
         }
 
         public void DisplayData()
@@ -62,6 +70,8 @@ namespace FEM.Models
             Console.WriteLine(string.Format(oneLineOfData, "Number of Nodes:", this.NumberOfNodes));
             Console.WriteLine(string.Format(oneLineOfData, "Integration schema wariant:", this.IntegrationSchemaWariant));
             Console.WriteLine(string.Format(oneLineOfData, "k Factor value:", this.KFactor));
+            Console.WriteLine(string.Format(oneLineOfData, "Specific Heat:", this.SpecificHeat));
+            Console.WriteLine(string.Format(oneLineOfData, "Density:", this.Density));
             Console.WriteLine();
         }
     }

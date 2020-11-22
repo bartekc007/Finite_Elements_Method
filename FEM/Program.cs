@@ -1,6 +1,4 @@
-﻿#define LAB_3
-
-using FEM.Models;
+﻿using FEM.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +21,7 @@ namespace FEM
 
             // Creating empty Global Structure
             Stopwatch t1 = Stopwatch.StartNew();
-            GlobalGrid GH = new GlobalGrid(data);
+            GlobalMatrix GH = new GlobalMatrix(data);
             //grid1.DisplayElements();
 
             for (int u = 0; u<grid1.Elements.Length;u++)
@@ -37,23 +35,33 @@ namespace FEM
                     localElement.CalculateJacobian(i);
                     localElement.ReverseJacobian();
                     localElement.CalculateNxNy(i);
-                    localElement.CalculateH(i,data.KFactor);
+                    localElement.CalculateH(i, data.KFactor);
+                    localElement.CalculateC(i, data.SpecificHeat, data.Density);
 
                     // Saving Local H
                     grid1.Elements[u].CalculateLocalH(u,grid1,localElement);
+                    grid1.Elements[u].CalculateLocalC(u, grid1, localElement);
                 }
-
                 // Calculating Global H
                 GH.CalculateGlobalH(u, grid1);
-                //localElement.DisplayGausseQuadrature(u);
+                GH.CalculateGlobalC(u, grid1);
+                
             }
             data.DisplayData();
             GH.DisplayGlobalH();
+            Console.WriteLine();
+
+            GH.DisplayGlobalC();
+            Console.WriteLine();
+
+            GH.DisplayGlobalMatrixSchema();
+            Console.WriteLine();
+
             Console.WriteLine("Execution Time: " + t1.Elapsed.TotalMilliseconds);
             GH.CalculateNonZeroElementPercentage();
             Console.ReadKey();
         }
-
+        
         
     }
 }

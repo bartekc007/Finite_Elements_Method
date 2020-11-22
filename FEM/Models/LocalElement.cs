@@ -72,6 +72,9 @@ namespace FEM.Models
         /// </summary>
         public double[] Ny { get; private set; }
 
+        public double[] N { get; private set; }
+
+        public double[,] ShapeFunctions { get; private set; }
 
         /// <summary>
         /// <para>Array[ i , pc , k ]</para>  
@@ -80,7 +83,7 @@ namespace FEM.Models
         /// <para>[ k ]   number of shape function</para>
         /// This array containing Derivatives of every shape function for each integration point in element
         /// </summary>
-        double[,,] DerivativesOfShapeFunctions;
+        public double[,,] DerivativesOfShapeFunctions { get; }
 
         /// <summary>
         /// Array[4,4] of NX[4]*NX[4,1] => {dN/dx} * {dN/dx}^T
@@ -98,6 +101,7 @@ namespace FEM.Models
         /// This localElement.H contains data for only one integration point.
         /// </summary>
         public double[,] H { get; private set; }
+        public double[,] C { get; private set; }
 
         public LocalElement(Grid grid, Element element, GlobalData globalData)
         {
@@ -108,6 +112,7 @@ namespace FEM.Models
                 this.IntegrationPointWeightKsi = new double[9] { 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0, 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0, 5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0 };
                 this.IntegrationPointWeightEta = new double[9] { 5.0 / 9.0, 5.0 / 9.0, 5.0 / 9.0, 8.0 / 9.0, 8.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0, 5.0 / 9.0, 5.0 / 9.0 };
                 this.DerivativesOfShapeFunctions = new double[2, 9, 4];
+                this.ShapeFunctions = new double[9, 4];
                 this.integrationPointsNumber = 9;
             }
             else if(globalData.IntegrationSchemaWariant == 2)
@@ -117,6 +122,7 @@ namespace FEM.Models
                 this.IntegrationPointWeightKsi = new double[4] { 1,1,1,1 };
                 this.IntegrationPointWeightEta = new double[4] { 1,1,1,1 };
                 this.DerivativesOfShapeFunctions = new double[2, 4, 4];
+                this.ShapeFunctions = new double[4, 4];
                 this.integrationPointsNumber = 4;
             }
             else if (globalData.IntegrationSchemaWariant == 4)
@@ -141,6 +147,7 @@ namespace FEM.Models
                 (18.0 + Math.Sqrt(30.0)) / 36, (18.0 + Math.Sqrt(30.0)) / 36, (18.0 + Math.Sqrt(30.0)) / 36, (18.0 + Math.Sqrt(30.0)) / 36,
                 (18.0 - Math.Sqrt(30.0)) / 36, (18.0 - Math.Sqrt(30.0)) / 36, (18.0 - Math.Sqrt(30.0)) / 36, (18.0 - Math.Sqrt(30.0)) / 36};
                 this.DerivativesOfShapeFunctions = new double[2, 16, 4];
+                this.ShapeFunctions = new double[16, 4];
                 this.integrationPointsNumber = 16;
             }
             else
@@ -167,17 +174,32 @@ namespace FEM.Models
 
             Nx = new double[4];
             Ny = new double[4];
+            N = new double[4];
 
             FinalNx = new double[4, 4];
             FinalNy = new double[4, 4];
 
             H = new double[4, 4];
+            C = new double[4, 4];
         }
+
+        public void CalculateShapeFunctions()
+        {
+            for (int i = 0; i < this.integrationPointsNumber; i++)
+            {
+                this.ShapeFunctions[i, 0] = 0.25 * (1 - this.Eta[i]) * (1 - this.Ksi[i]);
+                this.ShapeFunctions[i, 1] = 0.25 * (1 - this.Eta[i]) * (1 + this.Ksi[i]);
+                this.ShapeFunctions[i, 2] = 0.25 * (1 + this.Eta[i]) * (1 + this.Ksi[i]);
+                this.ShapeFunctions[i, 3] = 0.25 * (1 + this.Eta[i]) * (1 - this.Ksi[i]);
+            }
+        }
+
+
         /// <summary>
         /// <para>Calculating Derivatives of shape functions</para>
         /// <para>Return void. Data are created inside an object. LocalElement.DerivativesOfShapeFunctions[ , , ]</para>
         /// </summary>
-        public void GenerateDerivativesForShapeFunctions()
+        public void CalculateDerivativesForShapeFunctions()
         {
             for (int i = 0; i < this.integrationPointsNumber ; i++)
             {
@@ -201,7 +223,8 @@ namespace FEM.Models
         /// <param name="j">number of integration point</param>
         public void CalculateJacobian(int j)
         {
-            GenerateDerivativesForShapeFunctions();
+            CalculateDerivativesForShapeFunctions();
+            CalculateShapeFunctions();
 
             this.Jacoby[0, 0] = DerivativesOfShapeFunctions[0, j, 0] * this.X[0]
                 + DerivativesOfShapeFunctions[0, j, 1] * this.X[1]
@@ -330,8 +353,19 @@ namespace FEM.Models
                 {
                     Console.WriteLine(Eta[i]);
                 }
-            }    
-            
+            }
+
+        }
+
+        public void CalculateC(int pc, double cp, double ro)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    this.C[i, j] = (this.ShapeFunctions[pc,i] * this.ShapeFunctions[pc,j]) * this.DetJacoby * cp * ro * this.IntegrationPointWeightEta[pc]* this.IntegrationPointWeightKsi[pc];
+                }
+            }
         }
     }
 }
