@@ -2,7 +2,7 @@
 0.1           Width:
 4             Height Point Number:
 4             Width Point Number:
-4             Integration Schema Wariant
+2             Integration Schema Wariant
 25            k factor
 700           Specific Heat
 7800          Density

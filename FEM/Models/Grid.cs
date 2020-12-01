@@ -43,15 +43,29 @@ namespace FEM.Models
         }
         public void GenerateNodes()
         {
+
             double dH = this.Data.Height / (this.Data.HeightPointNumber - 1);
             double dW = this.Data.Width / (this.Data.WidthPointNumber - 1);
             int temp = 0;
+            bool edgeCondition = false;
 
             for(int i = 0; i < this.Data.WidthPointNumber; i++)
             {
                 for(int j = 0; j < this.Data.HeightPointNumber; j++)
                 {
-                    this.Nodes[temp] = new Node(i * dW, j * dH);
+                    if (i == 0 || i== this.Data.WidthPointNumber-1)
+                    {
+                        edgeCondition = true;
+                    }
+                    else if (j == 0 || j == this.Data.HeightPointNumber - 1)
+                    {
+                        edgeCondition = true;
+                    }
+                    else
+                    {
+                        edgeCondition = false;
+                    }
+                    this.Nodes[temp] = new Node(i * dW, j * dH, edgeCondition);
                     temp++;
                 }
             }
@@ -67,10 +81,10 @@ namespace FEM.Models
 
         public void DisplayNodes()
         {
-            string oneElemnt = "Node ID:{0,-4}  Node temperature: {1,-4} X: {2,-4:N4} Y: {3,-4:N4}";
+            string oneElemnt = "Node ID:{0,-4}  Node temperature: {1,-4} X: {2,-4:N4} Y: {3,-4:N4} BC: {4,-4}";
             int i = 1;
             foreach (var item in this.Nodes)
-                Console.WriteLine(string.Format(oneElemnt,i++, item.Temperature, item.X, item.Y));
+                Console.WriteLine(string.Format(oneElemnt,i++, item.Temperature, item.X, item.Y, item.EdgeCondition));
             Console.WriteLine();
         }
 

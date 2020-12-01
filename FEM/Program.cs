@@ -29,9 +29,9 @@ namespace FEM
                 // Creating global element
                 LocalElement localElement = new LocalElement(grid1, grid1.Elements[u],data);
 
+                // Calculating Local H for every integration point
                 for (int i = 0; i < Math.Pow(data.IntegrationSchemaWariant,2); i++)
                 {
-                    // Calculating Local H for every integration point
                     localElement.CalculateJacobian(i);
                     localElement.ReverseJacobian();
                     localElement.CalculateNxNy(i);
@@ -42,6 +42,11 @@ namespace FEM
                     grid1.Elements[u].CalculateLocalH(u,grid1,localElement);
                     grid1.Elements[u].CalculateLocalC(u, grid1, localElement);
                 }
+                // Calculation H Boudary Condition
+                localElement.CalculateHcb(data.KFactor, grid1, u);
+                grid1.Elements[u].MergeHWithHbc(localElement.Hbc);
+
+
                 // Calculating Global H
                 GH.CalculateGlobalH(u, grid1);
                 GH.CalculateGlobalC(u, grid1);
@@ -54,11 +59,12 @@ namespace FEM
             GH.DisplayGlobalC();
             Console.WriteLine();
 
-            GH.DisplayGlobalMatrixSchema();
+            //GH.DisplayGlobalMatrixSchema();
             Console.WriteLine();
 
             Console.WriteLine("Execution Time: " + t1.Elapsed.TotalMilliseconds);
             GH.CalculateNonZeroElementPercentage();
+
             Console.ReadKey();
         }
         

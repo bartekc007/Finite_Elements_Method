@@ -16,6 +16,7 @@ namespace FEM.Models
         public int[] ID { get; }
         public double[,] LocalH { get; }
         public double[,] LocalC { get; }
+        public double[,] LocalHbc { get; }
 
         public Element(int ElemtnID, int id1, int id2, int id3, int id4)
         {
@@ -27,6 +28,7 @@ namespace FEM.Models
             this.ID = new int[4] { id1, id2, id3, id4 };
             this.LocalH = new double[4, 4];
             this.LocalC = new double[4, 4];
+            this.LocalHbc = new double[4, 4];
         }
         public Element() { }
 
@@ -51,6 +53,36 @@ namespace FEM.Models
                 }
             }
         }
+        public void DisplayLocalHbc(int u)
+        {
+            Console.WriteLine("Hbc: " + (u + 1) );
+            for (int j = 0; j < 4; j++)
+            {
+                Console.Write("[");
+                for (int k = 0; k < 4; k++)
+                {
+                    string element = "{0,-10:F3}";
+                    Console.Write(string.Format(element, LocalHbc[j, k]));
+                }
+                Console.WriteLine("]");
+            }
+            Console.WriteLine();
+        }
+        public void DisplayLocalH(int u)
+        {
+            Console.WriteLine("Hbc: " + (u + 1));
+            for (int j = 0; j < 4; j++)
+            {
+                Console.Write("[");
+                for (int k = 0; k < 4; k++)
+                {
+                    string element = "{0,-10:F3}";
+                    Console.Write(string.Format(element, LocalH[j, k]));
+                }
+                Console.WriteLine("]");
+            }
+            Console.WriteLine();
+        }
 
         public void DisplayeLocalC()
         {
@@ -64,6 +96,18 @@ namespace FEM.Models
                     Console.Write(string.Format(element, LocalC[j,k]));
                 }
                 Console.WriteLine("]");
+            }
+        }
+
+        public void MergeHWithHbc(double[,] hbc)
+        {
+            for(int i=0; i< 4; i++)
+            {
+                for(int j=0; j< 4; j++)
+                {
+                    this.LocalHbc[i, j] = hbc[i, j];
+                    this.LocalH[i,j] += hbc[i, j];
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ namespace FEM.Models
 {
     public class LocalElement : ILocalElement
     {
+        #region Properties
 
         /// <summary>
         /// Array[pc] of KSI values at each integration point
@@ -103,6 +104,10 @@ namespace FEM.Models
         public double[,] H { get; private set; }
         public double[,] C { get; private set; }
 
+        public double[,] Hbc { get; private set; }
+
+        #endregion
+
         public LocalElement(Grid grid, Element element, GlobalData globalData)
         {
             if(globalData.IntegrationSchemaWariant ==3)
@@ -181,6 +186,7 @@ namespace FEM.Models
 
             H = new double[4, 4];
             C = new double[4, 4];
+            Hbc = new double[4, 4];
         }
 
         public void CalculateShapeFunctions()
@@ -193,7 +199,6 @@ namespace FEM.Models
                 this.ShapeFunctions[i, 3] = 0.25 * (1 + this.Eta[i]) * (1 - this.Ksi[i]);
             }
         }
-
 
         /// <summary>
         /// <para>Calculating Derivatives of shape functions</para>
@@ -335,6 +340,62 @@ namespace FEM.Models
                     Console.Write(Hl[j, k] + " , ");
                 }
                 Console.WriteLine("]");
+            }
+        }
+
+        public void CalculateHcb(int alpha, Grid grid, int elementNumber)
+        {
+            // for each element edge
+            for (int i = 0; i < grid.Elements[elementNumber].ID.Count(); i++)
+            {
+                Node nodeA = grid.Nodes[grid.Elements[elementNumber].ID[i]-1];
+                Node nodeB = grid.Nodes[grid.Elements[elementNumber].ID[(i + 1)%4]-1];
+
+                if (!(nodeA.EdgeCondition == true && nodeB.EdgeCondition == true))
+                    continue;
+                // for each integration point
+                for(int j=0; j<2;j++)
+                {
+                    double ksi= 0, eta=0;
+                    if(i==0)
+                    {
+                        ksi = Ksi[j];
+                        eta = -1.0;
+                    }
+                    else if (i==1)
+                    {
+                        ksi = 1;
+                        eta = Ksi[j];
+                    }
+                    else if (i == 2)
+                    {
+                        ksi = Ksi[j];
+                        eta = 1.0;
+                    }
+                    else if (i == 3)
+                    {
+                        ksi = -1.0;
+                        eta = Ksi[j];
+                    }
+
+                    double[] Nvector = new double[4];
+
+                    // for each shape function
+                    Nvector[0] = 0.25 * (1.0 - ksi) * (1.0 - eta);
+                    Nvector[1] = 0.25 * (1.0 + ksi) * (1.0 - eta);
+                    Nvector[2] = 0.25 * (1.0 + ksi) * (1.0 + eta);
+                    Nvector[3] = 0.25 * (1.0 - ksi) * (1.0 + eta);
+
+                    double detJ = Math.Sqrt(Math.Pow(nodeA.X-nodeB.X,2) + Math.Pow(nodeA.Y - nodeB.Y,2))/2;
+
+                    for(int a=0; a < 4; a++)
+                    {
+                        for (int b = 0; b < 4; b++)
+                        {
+                            this.Hbc[a, b] += Nvector[a] * Nvector[b] * IntegrationPointWeightKsi[j] * detJ * alpha;
+                        }
+                    }
+                }
             }
         }
 

@@ -107,28 +107,28 @@ namespace FEM.Models
 
         public void DisplayGlobalMatrixSchema()
         {
-            double MaxValue = GetMaxVale();
+            double MaxValue = GetMaxValue();
 
-            for (int i = 0; i < this.GlobalH.GetLength(0); i++)
+            for (int i = 0; i < this.GlobalC.GetLength(0); i++)
             {
                 Console.OutputEncoding = Encoding.Unicode;
                 Console.Write("|");
-                for (int j = 0; j < this.GlobalH.GetLength(1); j++)
+                for (int j = 0; j < this.GlobalC.GetLength(1); j++)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    if (Math.Abs(this.GlobalH[i, j]) <= (MaxValue * 0.51) && Math.Abs(this.GlobalH[i, j]) > (MaxValue * 0.26))
+                    if (Math.Abs(this.GlobalC[i, j]) <= (MaxValue * 0.51) && Math.Abs(this.GlobalC[i, j]) > (MaxValue * 0.26))
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
 
-                    if (Math.Abs(this.GlobalH[i, j]) <= (MaxValue * 0.26) && Math.Abs(this.GlobalH[i, j]) > (MaxValue * 0.14))
+                    if (Math.Abs(this.GlobalC[i, j]) <= (MaxValue * 0.26) && Math.Abs(this.GlobalC[i, j]) > (MaxValue * 0.14))
                         Console.ForegroundColor = ConsoleColor.DarkRed;
 
-                    if (Math.Abs(this.GlobalH[i, j]) <= (MaxValue * 0.14) && Math.Abs(this.GlobalH[i, j]) > (MaxValue * 0.08))
+                    if (Math.Abs(this.GlobalC[i, j]) <= (MaxValue * 0.14) && Math.Abs(this.GlobalC[i, j]) > (MaxValue * 0.08))
                         Console.ForegroundColor = ConsoleColor.Blue;
 
-                    if (Math.Abs(this.GlobalH[i, j]) <= (MaxValue * 0.08))
+                    if (Math.Abs(this.GlobalC[i, j]) <= Math.Abs(MaxValue * 0.08))
                         Console.ForegroundColor = ConsoleColor.DarkGray;
 
-                    if (this.GlobalH[i, j] ==0)
+                    if (this.GlobalC[i, j] ==0)
                         Console.ForegroundColor = ConsoleColor.Black;
                     
                     Console.Write("██");
@@ -139,7 +139,7 @@ namespace FEM.Models
 
         }
 
-        private double GetMaxVale()
+        private double GetMaxValue()
         {
             double result = 0.0;
             for(int i =0; i< this.GlobalH.GetLength(0);i++)
