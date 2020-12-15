@@ -20,6 +20,11 @@ namespace FEM.Models
         public readonly int KFactor;
         public readonly double SpecificHeat;
         public readonly double Density;
+        public readonly double InitialTemperature;
+        public readonly double AmbientTemperature;
+        public readonly double alfa;
+        public readonly double Time;
+        public readonly double dTime;
        
 
         public GlobalData()
@@ -57,6 +62,21 @@ namespace FEM.Models
 
             oneLine = lines[7].Split(' ');
             this.Density = double.Parse(oneLine[0]);
+
+            oneLine = lines[8].Split(' ');
+            this.InitialTemperature = double.Parse(oneLine[0]);
+
+            oneLine = lines[9].Split(' ');
+            this.AmbientTemperature = double.Parse(oneLine[0]);
+
+            oneLine = lines[10].Split(' ');
+            this.alfa = double.Parse(oneLine[0]);
+
+            oneLine = lines[11].Split(' ');
+            this.Time = double.Parse(oneLine[0]);
+
+            oneLine = lines[12].Split(' ');
+            this.dTime = double.Parse(oneLine[0]);
         }
 
         public void DisplayData()
@@ -72,6 +92,10 @@ namespace FEM.Models
             Console.WriteLine(string.Format(oneLineOfData, "k Factor value:", this.KFactor));
             Console.WriteLine(string.Format(oneLineOfData, "Specific Heat:", this.SpecificHeat));
             Console.WriteLine(string.Format(oneLineOfData, "Density:", this.Density));
+            Console.WriteLine(string.Format(oneLineOfData, "Initial Temperature:", this.InitialTemperature));
+            Console.WriteLine(string.Format(oneLineOfData, "alfa: ", this.alfa));
+            Console.WriteLine(string.Format(oneLineOfData, "Time: ", this.Time));
+            Console.WriteLine(string.Format(oneLineOfData, "dTime: ", this.dTime));
             Console.WriteLine();
         }
     }

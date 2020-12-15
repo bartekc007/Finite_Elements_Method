@@ -17,6 +17,7 @@ namespace FEM.Models
         public double[,] LocalH { get; }
         public double[,] LocalC { get; }
         public double[,] LocalHbc { get; }
+        public double [] LocalP { get; }
 
         public Element(int ElemtnID, int id1, int id2, int id3, int id4)
         {
@@ -29,6 +30,7 @@ namespace FEM.Models
             this.LocalH = new double[4, 4];
             this.LocalC = new double[4, 4];
             this.LocalHbc = new double[4, 4];
+            this.LocalP = new double[4];
         }
         public Element() { }
 
@@ -98,8 +100,20 @@ namespace FEM.Models
                 Console.WriteLine("]");
             }
         }
+        public void DisplayLocalP(int u)
+        {
+            Console.WriteLine("Element: " + u);
+            Console.Write("[");
+            for (int i = 0; i < this.LocalP.Length; i++)
+            {
+                string element = "{0,-10:F3}";
+                Console.Write(string.Format(element, LocalP[i]));
+            }
+            Console.WriteLine("]"); Console.WriteLine();
 
-        public void MergeHWithHbc(double[,] hbc)
+        }
+
+        public void MergeHWithHbcAndP(double[,] hbc,double[] p)
         {
             for(int i=0; i< 4; i++)
             {
@@ -108,6 +122,10 @@ namespace FEM.Models
                     this.LocalHbc[i, j] = hbc[i, j];
                     this.LocalH[i,j] += hbc[i, j];
                 }
+            }
+            for(int i=0; i<4; i++)
+            {
+                this.LocalP[i] += p[i];
             }
         }
     }

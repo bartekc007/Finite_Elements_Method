@@ -1,8 +1,13 @@
 ﻿0.1           Height:
 0.1           Width:
-4             Height Point Number:
-4             Width Point Number:
+31            Height Point Number:
+31            Width Point Number:
 2             Integration Schema Wariant
 25            k factor
 700           Specific Heat
 7800          Density
+100			  Initial Temperature
+1200          Ambient temperature
+300           alfa
+100           Time
+1             d Time

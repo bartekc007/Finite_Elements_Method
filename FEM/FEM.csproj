@@ -50,6 +50,7 @@
     <Compile Include="Models\ILocalElement.cs" />
     <Compile Include="Models\LocalElement.cs" />
     <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\SimulationSolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

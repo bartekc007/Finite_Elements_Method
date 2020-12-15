@@ -10,11 +10,13 @@ namespace FEM.Models
     {
         public double[,] GlobalH { get; }
         public double[,] GlobalC { get; }
+        public double[] GlobalP { get; }
 
         public GlobalMatrix(GlobalData data)
         {
             this.GlobalH = new double[data.NumberOfNodes, data.NumberOfNodes];
             this.GlobalC = new double[data.NumberOfNodes, data.NumberOfNodes];
+            this.GlobalP = new double[data.NumberOfNodes];
         }
 
         public void CalculateGlobalH(int u, Grid grid1)
@@ -35,6 +37,13 @@ namespace FEM.Models
                 {
                     this.GlobalC[grid1.Elements[u].ID[i] - 1, grid1.Elements[u].ID[j] - 1] += grid1.Elements[u].LocalC[i, j];
                 }
+            }
+        }
+        public void CalculateGlobalP(int u, Grid grid1)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                this.GlobalP[grid1.Elements[u].ID[j] - 1] += grid1.Elements[u].LocalP[j];
             }
         }
 
@@ -87,6 +96,40 @@ namespace FEM.Models
 
                 }
                 Console.WriteLine("]");
+            }
+        }
+
+        public void DisplayGlobalP()
+        {
+            Console.WriteLine("Global P:");
+            
+            Console.Write("[");
+            for (int k = 0; k < GlobalC.GetLength(1); k++)
+            {
+                string element = "{0,-10:F3} ";
+                Console.Write(string.Format(element, GlobalP[k]));
+            }
+            Console.WriteLine("]");
+        }
+
+        public void MergeGlobalHGlobalC(GlobalData data,Grid grid1)
+        {
+            for (int i = 0; i < data.NumberOfNodes; i++)
+            {
+                for (int j = 0; j < data.NumberOfNodes; j++)
+                {
+                    this.GlobalH[i, j] = this.GlobalH[i, j] + (this.GlobalC[i, j] / data.dTime);
+                }
+            }
+
+            for (int i = 0; i < data.NumberOfNodes; i++)
+            {
+                double row = 0.0;
+                for (int j = 0; j < data.NumberOfNodes; j++)
+                {
+                    row += (GlobalC[i, j] / data.dTime) * grid1.Nodes[j].Temperature;
+                }
+                this.GlobalP[i] = -1.0 * this.GlobalP[i] + row;
             }
         }
 
@@ -151,6 +194,19 @@ namespace FEM.Models
                 }
             }
             return result;
+        }
+
+        public void ClearTables()
+        {
+            for (int i = 0; i < GlobalP.Length; i++)
+            {
+                for (int j = 0; j < GlobalP.Length; j++)
+                {
+                    this.GlobalH[i,j] = 0;
+                    this.GlobalC[i, j] = 0;
+                }
+                this.GlobalP[i] = 0;
+            }
         }
 
     }

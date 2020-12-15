@@ -105,6 +105,7 @@ namespace FEM.Models
         public double[,] C { get; private set; }
 
         public double[,] Hbc { get; private set; }
+        public double [] P { get; set; }
 
         #endregion
 
@@ -187,6 +188,7 @@ namespace FEM.Models
             H = new double[4, 4];
             C = new double[4, 4];
             Hbc = new double[4, 4];
+            P = new double[4];
         }
 
         public void CalculateShapeFunctions()
@@ -343,7 +345,7 @@ namespace FEM.Models
             }
         }
 
-        public void CalculateHcb(int alpha, Grid grid, int elementNumber)
+        public void CalculateHcb(double alpha, Grid grid, int elementNumber, double InitialTemperature, int integrationSchema)
         {
             // for each element edge
             for (int i = 0; i < grid.Elements[elementNumber].ID.Count(); i++)
@@ -354,7 +356,7 @@ namespace FEM.Models
                 if (!(nodeA.EdgeCondition == true && nodeB.EdgeCondition == true))
                     continue;
                 // for each integration point
-                for(int j=0; j<2;j++)
+                for(int j=0; j<integrationSchema;j++)
                 {
                     double ksi= 0, eta=0;
                     if(i==0)
@@ -394,6 +396,11 @@ namespace FEM.Models
                         {
                             this.Hbc[a, b] += Nvector[a] * Nvector[b] * IntegrationPointWeightKsi[j] * detJ * alpha;
                         }
+                    }
+
+                    for(int c = 0; c< 4; c++)
+                    {
+                        this.P[c] += Nvector[c] * IntegrationPointWeightKsi[j] * InitialTemperature * detJ * alpha * -1;
                     }
                 }
             }

@@ -41,7 +41,7 @@ namespace FEM.Models
                 
             }
         }
-        public void GenerateNodes()
+        public void GenerateNodes(GlobalData data)
         {
 
             double dH = this.Data.Height / (this.Data.HeightPointNumber - 1);
@@ -65,7 +65,7 @@ namespace FEM.Models
                     {
                         edgeCondition = false;
                     }
-                    this.Nodes[temp] = new Node(i * dW, j * dH, edgeCondition);
+                    this.Nodes[temp] = new Node(data.InitialTemperature,i * dW, j * dH, edgeCondition);
                     temp++;
                 }
             }
