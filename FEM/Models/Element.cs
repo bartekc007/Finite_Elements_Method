@@ -113,7 +113,7 @@ namespace FEM.Models
 
         }
 
-        public void MergeHWithHbcAndP(double[,] hbc,double[] p)
+        public void MergeHWithHbcAndP(double[,] hbc, double[] p)
         {
             for(int i=0; i< 4; i++)
             {

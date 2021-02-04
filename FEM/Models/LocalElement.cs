@@ -223,6 +223,7 @@ namespace FEM.Models
                 this.DerivativesOfShapeFunctions[1, i, 3] = 0.25 * (1 - this.Ksi[i]);
             }
         }
+
         /// <summary>
         /// <para>Calculating values for actual integration point</para>
         /// <para>Return void. Data are created inside an object. LocalElement.Jacoby[,]</para>
@@ -250,6 +251,7 @@ namespace FEM.Models
                 + DerivativesOfShapeFunctions[1, j, 2] * this.Y[2]
                 + DerivativesOfShapeFunctions[1, j, 3] * this.Y[3];
         }
+
         /// <summary>
         /// <para>Calculating values using inside data from LocalElement.Jacoby </para>
         /// <para>Return void. Data are created inside an object. LocalElement.ReverseJacoby[,]</para>
@@ -263,6 +265,7 @@ namespace FEM.Models
             this.ReverseJacoby[1, 0] = -1 * this.Jacoby[1, 0] / this.DetJacoby;
             this.ReverseJacoby[1, 1] = this.Jacoby[0, 0] / this.DetJacoby;
         }
+
         /// <summary>
         /// <para>Calculating values using inside data from LocalElement.Jacoby </para>
         /// <para>Return void. Data are created inside an object. LocalElement.DetJ</para>
@@ -271,6 +274,7 @@ namespace FEM.Models
         {
             this.DetJacoby = (this.Jacoby[0, 0] * this.Jacoby[1, 1]) - (this.Jacoby[0, 1] * this.Jacoby[1, 0]);
         }
+
         /// <summary>
         /// Write all derivatives of shape functions to standard output
         /// </summary>
@@ -290,6 +294,7 @@ namespace FEM.Models
                 Console.WriteLine();
             }
         }
+
         /// <summary>
         /// <para>Calculating values using inside data from LocalElement.ReverseJacoby and LocalElement.DerivativersOfShapeFunctions </para>
         /// <para>Return void. Data are created inside an object. LocalElement.NX and LocalElement.NY </para>
@@ -312,6 +317,7 @@ namespace FEM.Models
                 }
             }
         }
+
         /// <summary>
         /// <para>Calculating H for only one integration point</para>
         /// <para>Return void. Data are created inside an object LocalElement.H </para>
@@ -326,6 +332,7 @@ namespace FEM.Models
                 }
             }
         }
+
         /// <summary>
         /// Write Local H to standard output
         /// </summary>
